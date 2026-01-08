@@ -1,0 +1,90 @@
+import React, { useCallback, useState } from "react";
+import ReactFlow, { Background, Controls, Node, ReactFlowInstance } from "reactflow";
+import "reactflow/dist/style.css";
+import { useBuilderContext } from "../context/BuilderContext";
+import StartNode from "../nodes/StartNode";
+import PromptNode from "../nodes/PromptNode";
+import AITextNode from "../nodes/AITextNode";
+import ResultNode from "../nodes/ResultNode";
+import { BuilderNodeData } from "../types";
+
+const nodeTypes = {
+  start: StartNode,
+  prompt: PromptNode,
+  ai_text: AITextNode,
+  result: ResultNode,
+};
+
+const Canvas: React.FC = () => {
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    selectNode,
+    addNode,
+  } = useBuilderContext();
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+
+  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      const type = event.dataTransfer.getData("application/reactflow");
+      if (!type) {
+        return;
+      }
+
+      const bounds = event.currentTarget.getBoundingClientRect();
+      const position = reactFlowInstance
+        ? reactFlowInstance.project({
+            x: event.clientX - bounds.left,
+            y: event.clientY - bounds.top,
+          })
+        : { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
+
+      const node: Node<BuilderNodeData> = {
+        id: `${type}-${Date.now()}`,
+        type,
+        position,
+        data: {
+          kind: "ai_text",
+          provider: "openai",
+          model: "gpt-4o-mini",
+          temperature: 0.7,
+        },
+      };
+
+      addNode(node);
+    },
+    [addNode, reactFlowInstance]
+  );
+
+  return (
+    <div style={{ flex: 1, height: "100%" }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onInit={setReactFlowInstance}
+        onNodeClick={(_, node) => selectNode(node.id)}
+        nodeTypes={nodeTypes}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        fitView
+      >
+        <Background gap={16} size={1} color="#e2e8f0" />
+        <Controls />
+      </ReactFlow>
+    </div>
+  );
+};
+
+export default Canvas;

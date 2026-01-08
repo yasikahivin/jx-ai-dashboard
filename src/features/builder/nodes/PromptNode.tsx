@@ -8,10 +8,9 @@ interface PromptNodeProps {
 
 const PromptNode: React.FC<PromptNodeProps> = ({ data }) => {
   return (
-    <div className="builder-node prompt">
-      <div className="node-title">Enter Prompt</div>
-      <div className="node-meta">{data.prompt}</div>
-      <div className="node-pill">Tool: OpenAI | ChatGPT V5</div>
+    <div style={{ padding: 12, border: "1px solid #e2e8f0", borderRadius: 10, background: "#fff" }}>
+      <div style={{ fontWeight: 600, marginBottom: 6 }}>Prompt</div>
+      <div style={{ fontSize: 12, color: "#475569" }}>{data.prompt}</div>
       <Handle type="target" position={Position.Left} />
       <Handle type="source" position={Position.Right} />
     </div>

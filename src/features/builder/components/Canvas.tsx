@@ -80,7 +80,7 @@ const Canvas: React.FC = () => {
         onDragOver={onDragOver}
         fitView
       >
-        <Background gap={18} size={1} color="#e2e8f0" variant="dots" />
+        <Background gap={16} size={1} color="#e2e8f0" />
         <Controls />
       </ReactFlow>
     </div>

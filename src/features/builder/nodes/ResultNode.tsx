@@ -8,10 +8,9 @@ interface ResultNodeProps {
 
 const ResultNode: React.FC<ResultNodeProps> = ({ data }) => {
   return (
-    <div className="builder-node result">
-      <div className="node-title">Final Result</div>
-      <div className="node-meta">{data.output || "Awaiting output..."}</div>
-      <div className="node-pill">Result</div>
+    <div style={{ padding: 12, border: "1px solid #fbcfe8", borderRadius: 10, background: "#fdf2f8", minWidth: 200 }}>
+      <div style={{ fontWeight: 600, marginBottom: 6 }}>Result</div>
+      <div style={{ fontSize: 12, color: "#475569" }}>{data.output || "Awaiting output..."}</div>
       <Handle type="target" position={Position.Left} />
     </div>
   );

@@ -12,9 +12,9 @@ const NodeConfigDrawer: React.FC = () => {
 
   if (!selectedNode) {
     return (
-      <div className="panel-section">
-        <div className="panel-title">Node Configuration</div>
-        <div style={{ color: "#64748b", fontSize: 13 }}>Select a node to edit its settings.</div>
+      <div style={{ padding: 16, color: "#64748b" }}>
+        <div style={{ fontWeight: 600, marginBottom: 8 }}>Node Configuration</div>
+        <div>Select a node to edit its settings.</div>
       </div>
     );
   }
@@ -22,8 +22,8 @@ const NodeConfigDrawer: React.FC = () => {
   const data = selectedNode.data;
 
   return (
-    <div className="panel-section">
-      <div className="panel-title">Node Configuration</div>
+    <div style={{ padding: 16, borderTop: "1px solid #e2e8f0" }}>
+      <div style={{ fontWeight: 600, marginBottom: 12 }}>Node Configuration</div>
       {data.kind === "prompt" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <label style={{ fontSize: 12, color: "#475569" }}>Prompt</label>

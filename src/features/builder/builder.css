@@ -184,6 +184,10 @@
   border-color: #93c5fd;
 }
 
+.builder-node.ai-image {
+  border-color: #f9a8d4;
+}
+
 .builder-node.prompt {
   border-color: #a7f3d0;
 }

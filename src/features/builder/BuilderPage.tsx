@@ -7,6 +7,7 @@ import { useBuilderContext } from "./context/BuilderContext";
 import { useExecutionContext } from "./context/ExecutionContext";
 import { runWorkflow } from "./engine/runner";
 import { AITextNodeData, PromptNodeData } from "./types";
+import "./builder.css";
 
 const BuilderPage: React.FC = () => {
   const { nodes, updateNodeData } = useBuilderContext();
@@ -51,39 +52,50 @@ const BuilderPage: React.FC = () => {
   }, [addLog, nodes, reset, setResult, setStatus, updateNodeData]);
 
   return (
-    <div style={{ display: "flex", height: "100vh", background: "#f8fafc" }}>
-      <div style={{ width: 48 }} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "12px 16px", borderBottom: "1px solid #e2e8f0", background: "#ffffff" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div>
-              <div style={{ fontSize: 18, fontWeight: 600 }}>Builder</div>
-              <div style={{ fontSize: 12, color: "#64748b" }}>Design AI workflows visually.</div>
-            </div>
-            <button
-              onClick={handleRun}
-              style={{
-                padding: "8px 16px",
-                borderRadius: 8,
-                border: "none",
-                background: "#1d4ed8",
-                color: "#fff",
-                cursor: "pointer",
-              }}
-            >
+    <div className="builder-shell">
+      <aside className="builder-sidebar-left">
+        <div className="builder-brand">
+          <span className="builder-brand-mark" />
+          Jxai
+        </div>
+        <div className="builder-nav">
+          <div className="builder-nav-section">
+            <div className="builder-nav-title">AI Tools</div>
+            <div className="builder-nav-item primary">All Tools</div>
+            <div className="builder-nav-item">Favorites</div>
+            <div className="builder-nav-item">Popular</div>
+          </div>
+          <div className="builder-nav-section">
+            <div className="builder-nav-title">Utilities</div>
+            <div className="builder-nav-item">Templates</div>
+            <div className="builder-nav-item">Marketplace</div>
+          </div>
+        </div>
+        <div className="builder-upgrade">Upgrade</div>
+      </aside>
+
+      <div className="builder-main">
+        <header className="builder-topbar">
+          <div className="builder-topbar-title">Template Name</div>
+          <div className="builder-topbar-actions">
+            <button className="builder-button">Undo</button>
+            <button className="builder-button">Redo</button>
+            <button className="builder-button">Edit</button>
+            <button className="builder-button primary" onClick={handleRun}>
               Run
             </button>
           </div>
-        </div>
-        <div style={{ flex: 1, display: "flex" }}>
+        </header>
+        <div className="builder-canvas">
           <Canvas />
         </div>
       </div>
-      <div style={{ width: 320, borderLeft: "1px solid #e2e8f0", background: "#ffffff", display: "flex", flexDirection: "column" }}>
+
+      <aside className="builder-sidebar-right">
         <ToolPanel />
         <NodeConfigDrawer />
         <ResultPanel />
-      </div>
+      </aside>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-export type NodeKind = "start" | "prompt" | "ai_text" | "result";
+export type NodeKind = "start" | "prompt" | "ai_text" | "ai_image" | "result";
 
 export type Provider = "openai" | "gemini" | "mistral";
 
@@ -19,6 +19,13 @@ export interface AITextNodeData {
   temperature: number;
 }
 
+export interface AIImageNodeData {
+  kind: "ai_image";
+  provider: Provider;
+  model: string;
+  size: string;
+}
+
 export interface ResultNodeData {
   kind: "result";
   output: string;
@@ -28,6 +35,7 @@ export type BuilderNodeData =
   | StartNodeData
   | PromptNodeData
   | AITextNodeData
+  | AIImageNodeData
   | ResultNodeData;
 
 export interface BuilderTool {

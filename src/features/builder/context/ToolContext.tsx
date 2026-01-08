@@ -9,6 +9,7 @@ const ToolContext = createContext<ToolContextValue | undefined>(undefined);
 
 const tools: BuilderTool[] = [
   { id: "tool-ai-text", label: "AI Text", nodeType: "ai_text" },
+  { id: "tool-ai-image", label: "AI Image", nodeType: "ai_image" },
 ];
 
 export const ToolProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

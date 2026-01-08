@@ -5,6 +5,7 @@ import { useBuilderContext } from "../context/BuilderContext";
 import StartNode from "../nodes/StartNode";
 import PromptNode from "../nodes/PromptNode";
 import AITextNode from "../nodes/AITextNode";
+import AIImageNode from "../nodes/AIImageNode";
 import ResultNode from "../nodes/ResultNode";
 import { BuilderNodeData } from "../types";
 
@@ -12,6 +13,7 @@ const nodeTypes = {
   start: StartNode,
   prompt: PromptNode,
   ai_text: AITextNode,
+  ai_image: AIImageNode,
   result: ResultNode,
 };
 
@@ -48,16 +50,26 @@ const Canvas: React.FC = () => {
           })
         : { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
 
-      const node: Node<BuilderNodeData> = {
-        id: `${type}-${Date.now()}`,
-        type,
-        position,
-        data: {
+      const nodeDataByType: Record<string, BuilderNodeData> = {
+        ai_text: {
           kind: "ai_text",
           provider: "openai",
           model: "gpt-4o-mini",
           temperature: 0.7,
         },
+        ai_image: {
+          kind: "ai_image",
+          provider: "openai",
+          model: "gpt-image-1",
+          size: "1024x1024",
+        },
+      };
+
+      const node: Node<BuilderNodeData> = {
+        id: `${type}-${Date.now()}`,
+        type,
+        position,
+        data: nodeDataByType[type] ?? nodeDataByType.ai_text,
       };
 
       addNode(node);
@@ -80,7 +92,7 @@ const Canvas: React.FC = () => {
         onDragOver={onDragOver}
         fitView
       >
-        <Background gap={16} size={1} color="#e2e8f0" />
+        <Background gap={18} size={1} color="#e2e8f0" variant="dots" />
         <Controls />
       </ReactFlow>
     </div>

@@ -1,11 +1,5 @@
 import React, { useCallback, useState } from "react";
-import ReactFlow, {
-  Background,
-  Controls,
-  Node,
-  ReactFlowInstance,
-  OnSelectionChangeParams,
-} from "reactflow";
+import ReactFlow, { Background, Controls, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 import { useBuilderContext } from "../context/BuilderContext";
 import StartNode from "../nodes/StartNode";
@@ -31,7 +25,6 @@ const Canvas: React.FC = () => {
     onEdgesChange,
     onConnect,
     selectNode,
-    selectEdge,
     addNode,
   } = useBuilderContext();
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
@@ -84,16 +77,6 @@ const Canvas: React.FC = () => {
     [addNode, reactFlowInstance]
   );
 
-  const onSelectionChange = useCallback(
-    (params: OnSelectionChangeParams) => {
-      const selectedNode = params.nodes[0];
-      const selectedEdge = params.edges[0];
-      selectNode(selectedNode ? selectedNode.id : null);
-      selectEdge(selectedEdge ? selectedEdge.id : null);
-    },
-    [selectEdge, selectNode]
-  );
-
   return (
     <div style={{ flex: 1, height: "100%" }}>
       <ReactFlow
@@ -103,7 +86,7 @@ const Canvas: React.FC = () => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onInit={setReactFlowInstance}
-        onSelectionChange={onSelectionChange}
+        onNodeClick={(_, node) => selectNode(node.id)}
         nodeTypes={nodeTypes}
         onDrop={onDrop}
         onDragOver={onDragOver}

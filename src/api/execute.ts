@@ -1,6 +1,6 @@
-import { AITextConfig } from "../features/builder/types";
-import { createThread } from "./threads";
-import { sendText } from "./chat";
+import { AITextConfig } from '../features/builder/types';
+import { createThread } from './threads';
+import { sendText } from './chat';
 
 export interface ExecuteTextFlowResponse {
   output: string;
@@ -30,7 +30,11 @@ export interface ExecuteGraphFlowResponse {
   threadId: string;
 }
 
-const getOutputFromResponse = (response: { output?: string; assistant?: string; message?: string }): string => {
+const getOutputFromResponse = (response: {
+  output?: string;
+  assistant?: string;
+  message?: string;
+}): string => {
   // The backend responses vary by provider today, so we normalize to keep UI stable.
   if (response.output) {
     return response.output;
@@ -41,7 +45,7 @@ const getOutputFromResponse = (response: { output?: string; assistant?: string; 
   if (response.message) {
     return response.message;
   }
-  return "";
+  return '';
 };
 
 export async function executeTextFlow(
@@ -53,7 +57,6 @@ export async function executeTextFlow(
     thread_id: thread.thread_id,
     provider: config.provider,
     model: config.model,
-    temperature: config.temperature,
     prompt,
   });
 
@@ -62,7 +65,11 @@ export async function executeTextFlow(
 
 const buildGraphPrompt = (payload: ExecuteGraphPayload): string => {
   // The backend only supports text endpoints, so we serialize the graph into a single prompt.
-  return `Execute workflow graph with runtime inputs:\n${JSON.stringify(payload, null, 2)}`;
+  return `Execute workflow graph with runtime inputs:\n${JSON.stringify(
+    payload,
+    null,
+    2
+  )}`;
 };
 
 export async function executeGraphFlow(
@@ -74,9 +81,11 @@ export async function executeGraphFlow(
     thread_id: thread.thread_id,
     provider: config.provider,
     model: config.model,
-    temperature: config.temperature,
     prompt: buildGraphPrompt(payload),
   });
 
-  return { output: getOutputFromResponse(response), threadId: thread.thread_id };
+  return {
+    output: getOutputFromResponse(response),
+    threadId: thread.thread_id,
+  };
 }

@@ -1,11 +1,10 @@
-import { apiRequest } from "./client";
-import { Provider } from "../features/builder/types";
+import { apiRequest } from './client';
+import { Provider } from '../features/builder/types';
 
 export interface SendTextRequest {
   thread_id: string;
   provider: Provider;
   model: string;
-  temperature: number;
   prompt: string;
 }
 
@@ -15,9 +14,14 @@ export interface SendTextResponse {
   message?: string;
 }
 
-export async function sendText(request: SendTextRequest): Promise<SendTextResponse> {
-  return apiRequest<SendTextResponse, SendTextRequest>("/api/chat/text?user_id=dev", {
-    method: "POST",
-    body: request,
-  });
+export async function sendText(
+  request: SendTextRequest
+): Promise<SendTextResponse> {
+  return apiRequest<SendTextResponse, SendTextRequest>(
+    '/api/chat/text?user_id=dev',
+    {
+      method: 'POST',
+      body: request,
+    }
+  );
 }

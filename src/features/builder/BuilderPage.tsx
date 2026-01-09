@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import Canvas from "./components/Canvas";
 import ToolPanel from "./components/ToolPanel";
 import NodeConfigDrawer from "./components/NodeConfigDrawer";
@@ -10,8 +10,49 @@ import { AITextNodeData, PromptNodeData } from "./types";
 import "./builder.css";
 
 const BuilderPage: React.FC = () => {
-  const { nodes, updateNodeData } = useBuilderContext();
+  const {
+    nodes,
+    updateNodeData,
+    deleteSelected,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    selectedNodeId,
+    selectedEdgeId,
+    selectNode,
+  } = useBuilderContext();
   const { setStatus, addLog, setResult, reset } = useExecutionContext();
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Delete" || event.key === "Backspace") {
+        if (selectedNodeId || selectedEdgeId) {
+          deleteSelected();
+        }
+        return;
+      }
+
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
+        event.preventDefault();
+        if (event.shiftKey) {
+          redo();
+        } else {
+          undo();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [deleteSelected, redo, selectedEdgeId, selectedNodeId, undo]);
+
+  const handleEdit = useCallback(() => {
+    if (!selectedNodeId) {
+      const promptNode = nodes.find((node) => node.data.kind === "prompt");
+      selectNode(promptNode ? promptNode.id : null);
+    }
+  }, [nodes, selectNode, selectedNodeId]);
 
   const handleRun = useCallback(async () => {
     // We clear previous execution state so the user only sees the latest run.
@@ -78,9 +119,18 @@ const BuilderPage: React.FC = () => {
         <header className="builder-topbar">
           <div className="builder-topbar-title">Template Name</div>
           <div className="builder-topbar-actions">
-            <button className="builder-button">Undo</button>
-            <button className="builder-button">Redo</button>
-            <button className="builder-button">Edit</button>
+            <button className="builder-button" onClick={undo} disabled={!canUndo}>
+              Undo
+            </button>
+            <button className="builder-button" onClick={redo} disabled={!canRedo}>
+              Redo
+            </button>
+            <button className="builder-button" onClick={handleEdit}>
+              Edit
+            </button>
+            <button className="builder-button" onClick={deleteSelected}>
+              Delete
+            </button>
             <button className="builder-button primary" onClick={handleRun}>
               Run
             </button>

@@ -1,19 +1,19 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState } from 'react';
 import ReactFlow, {
   Background,
   Controls,
   Node,
   ReactFlowInstance,
   OnSelectionChangeParams,
-} from "reactflow";
-import "reactflow/dist/style.css";
-import { useBuilderContext } from "../context/BuilderContext";
-import StartNode from "../nodes/StartNode";
-import PromptNode from "../nodes/PromptNode";
-import AITextNode from "../nodes/AITextNode";
-import AIImageNode from "../nodes/AIImageNode";
-import ResultNode from "../nodes/ResultNode";
-import { BuilderNodeData } from "../types";
+} from 'reactflow';
+import 'reactflow/dist/style.css';
+import { useBuilderContext } from '../context/BuilderContext';
+import StartNode from '../nodes/StartNode';
+import PromptNode from '../nodes/PromptNode';
+import AITextNode from '../nodes/AITextNode';
+import AIImageNode from '../nodes/AIImageNode';
+import ResultNode from '../nodes/ResultNode';
+import { BuilderNodeData } from '../types';
 
 const nodeTypes = {
   start: StartNode,
@@ -34,17 +34,18 @@ const Canvas: React.FC = () => {
     selectEdge,
     addNode,
   } = useBuilderContext();
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+  const [reactFlowInstance, setReactFlowInstance] =
+    useState<ReactFlowInstance | null>(null);
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.dropEffect = 'move';
   }, []);
 
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      const type = event.dataTransfer.getData("application/reactflow");
+      const type = event.dataTransfer.getData('application/reactflow');
       if (!type) {
         return;
       }
@@ -59,16 +60,15 @@ const Canvas: React.FC = () => {
 
       const nodeDataByType: Record<string, BuilderNodeData> = {
         ai_text: {
-          kind: "ai_text",
-          provider: "openai",
-          model: "gpt-4o-mini",
-          temperature: 0.7,
+          kind: 'ai_text',
+          provider: 'openai',
+          model: 'gpt-4o-mini',
         },
         ai_image: {
-          kind: "ai_image",
-          provider: "openai",
-          model: "gpt-image-1",
-          size: "1024x1024",
+          kind: 'ai_image',
+          provider: 'openai',
+          model: 'gpt-image-1',
+          size: '1024x1024',
         },
       };
 
@@ -95,7 +95,7 @@ const Canvas: React.FC = () => {
   );
 
   return (
-    <div style={{ flex: 1, height: "100%" }}>
+    <div style={{ flex: 1, height: '100%' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

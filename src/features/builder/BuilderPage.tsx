@@ -12,6 +12,7 @@ import "./builder.css";
 const BuilderPage: React.FC = () => {
   const {
     nodes,
+    edges,
     updateNodeData,
     deleteSelected,
     undo,
@@ -74,18 +75,24 @@ const BuilderPage: React.FC = () => {
     const aiTextData = aiTextNode.data as AITextNodeData;
 
     try {
-      const output = await runWorkflow({
-        prompt: promptData.prompt,
-        aiTextConfig: {
-          provider: aiTextData.provider,
-          model: aiTextData.model,
-          temperature: aiTextData.temperature,
+      addLog(`Sending graph with ${nodes.length} nodes and ${edges.length} edges to backend.`);
+      const response = await runWorkflow({
+        nodes,
+        edges,
+        runtimeInputs: {
+          prompt: promptData.prompt,
+          aiTextConfig: {
+            provider: aiTextData.provider,
+            model: aiTextData.model,
+            temperature: aiTextData.temperature,
+          },
         },
       });
-      setResult(output);
-      updateNodeData(resultNode.id, { output });
+      const mergedOutput = `Prompt:\n${promptData.prompt}\n\nOutput:\n${response.output}`;
+      setResult(mergedOutput);
+      updateNodeData(resultNode.id, { output: response.output });
       setStatus("success");
-      addLog("Workflow completed.");
+      addLog(`Workflow completed (thread ${response.threadId}).`);
     } catch (error) {
       setStatus("error");
       addLog(error instanceof Error ? error.message : "Unknown error occurred.");

@@ -5,7 +5,8 @@ export interface CreateThreadResponse {
 }
 
 export async function createThread(): Promise<CreateThreadResponse> {
-  return apiRequest<CreateThreadResponse>("/api/chat/threads", {
-    method: "POST",
-  });
+  // return apiRequest<CreateThreadResponse>("/api/chat/threads", {
+  //   method: "POST",
+  // });
+  return { thread_id: 'test-thread-id' };
 }

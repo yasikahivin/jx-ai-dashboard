@@ -5,7 +5,6 @@ export interface SendTextRequest {
   thread_id: string;
   provider: Provider;
   model: string;
-  temperature: number;
   prompt: string;
 }
 

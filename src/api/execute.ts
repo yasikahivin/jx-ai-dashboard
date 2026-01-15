@@ -1,6 +1,6 @@
-import { AITextConfig } from '../features/builder/types';
-import { createThread } from './threads';
-import { sendText } from './chat';
+import { AITextConfig } from "../features/builder/types";
+import { createThread } from "./threads";
+import { sendText } from "./chat";
 
 export interface ExecuteTextFlowResponse {
   output: string;
@@ -30,11 +30,7 @@ export interface ExecuteGraphFlowResponse {
   threadId: string;
 }
 
-const getOutputFromResponse = (response: {
-  output?: string;
-  assistant?: string;
-  message?: string;
-}): string => {
+const getOutputFromResponse = (response: { output?: string; assistant?: string; message?: string }): string => {
   // The backend responses vary by provider today, so we normalize to keep UI stable.
   if (response.output) {
     return response.output;
@@ -45,7 +41,7 @@ const getOutputFromResponse = (response: {
   if (response.message) {
     return response.message;
   }
-  return '';
+  return "";
 };
 
 export async function executeTextFlow(

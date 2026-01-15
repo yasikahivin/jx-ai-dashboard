@@ -1,32 +1,33 @@
-export type NodeKind = 'start' | 'prompt' | 'ai_text' | 'ai_image' | 'result';
+export type NodeKind = "start" | "prompt" | "ai_text" | "ai_image" | "result";
 
-export type Provider = 'openai' | 'gemini' | 'mistral';
+export type Provider = "openai" | "gemini" | "mistral";
 
 export interface StartNodeData {
-  kind: 'start';
+  kind: "start";
   label: string;
 }
 
 export interface PromptNodeData {
-  kind: 'prompt';
+  kind: "prompt";
   prompt: string;
 }
 
 export interface AITextNodeData {
-  kind: 'ai_text';
+  kind: "ai_text";
   provider: Provider;
   model: string;
+  temperature: number;
 }
 
 export interface AIImageNodeData {
-  kind: 'ai_image';
+  kind: "ai_image";
   provider: Provider;
   model: string;
   size: string;
 }
 
 export interface ResultNodeData {
-  kind: 'result';
+  kind: "result";
   output: string;
 }
 
@@ -43,7 +44,7 @@ export interface BuilderTool {
   nodeType: NodeKind;
 }
 
-export type ExecutionStatus = 'idle' | 'running' | 'success' | 'error';
+export type ExecutionStatus = "idle" | "running" | "success" | "error";
 
 export interface ExecutionState {
   status: ExecutionStatus;
@@ -54,4 +55,5 @@ export interface ExecutionState {
 export interface AITextConfig {
   provider: Provider;
   model: string;
+  temperature: number;
 }

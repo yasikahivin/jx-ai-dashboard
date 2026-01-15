@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect } from 'react';
-import Canvas from './components/Canvas';
-import ToolPanel from './components/ToolPanel';
-import NodeConfigDrawer from './components/NodeConfigDrawer';
-import ResultPanel from './components/ResultPanel';
-import { useBuilderContext } from './context/BuilderContext';
-import { useExecutionContext } from './context/ExecutionContext';
-import { runWorkflow } from './engine/runner';
-import { AITextNodeData, PromptNodeData } from './types';
-import './builder.css';
+import React, { useCallback, useEffect } from "react";
+import Canvas from "./components/Canvas";
+import ToolPanel from "./components/ToolPanel";
+import NodeConfigDrawer from "./components/NodeConfigDrawer";
+import ResultPanel from "./components/ResultPanel";
+import { useBuilderContext } from "./context/BuilderContext";
+import { useExecutionContext } from "./context/ExecutionContext";
+import { runWorkflow } from "./engine/runner";
+import { AITextNodeData, PromptNodeData } from "./types";
+import "./builder.css";
 
 const BuilderPage: React.FC = () => {
   const {
@@ -27,14 +27,14 @@ const BuilderPage: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Delete' || event.key === 'Backspace') {
+      if (event.key === "Delete" || event.key === "Backspace") {
         if (selectedNodeId || selectedEdgeId) {
           deleteSelected();
         }
         return;
       }
 
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
         event.preventDefault();
         if (event.shiftKey) {
           redo();
@@ -44,13 +44,13 @@ const BuilderPage: React.FC = () => {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [deleteSelected, redo, selectedEdgeId, selectedNodeId, undo]);
 
   const handleEdit = useCallback(() => {
     if (!selectedNodeId) {
-      const promptNode = nodes.find((node) => node.data.kind === 'prompt');
+      const promptNode = nodes.find((node) => node.data.kind === "prompt");
       selectNode(promptNode ? promptNode.id : null);
     }
   }, [nodes, selectNode, selectedNodeId]);
@@ -58,16 +58,16 @@ const BuilderPage: React.FC = () => {
   const handleRun = useCallback(async () => {
     // We clear previous execution state so the user only sees the latest run.
     reset();
-    setStatus('running');
-    addLog('Starting workflow execution.');
+    setStatus("running");
+    addLog("Starting workflow execution.");
 
-    const promptNode = nodes.find((node) => node.data.kind === 'prompt');
-    const aiTextNode = nodes.find((node) => node.data.kind === 'ai_text');
-    const resultNode = nodes.find((node) => node.data.kind === 'result');
+    const promptNode = nodes.find((node) => node.data.kind === "prompt");
+    const aiTextNode = nodes.find((node) => node.data.kind === "ai_text");
+    const resultNode = nodes.find((node) => node.data.kind === "result");
 
     if (!promptNode || !aiTextNode || !resultNode) {
-      setStatus('error');
-      addLog('Required nodes are missing from the canvas.');
+      setStatus("error");
+      addLog("Required nodes are missing from the canvas.");
       return;
     }
 
@@ -75,9 +75,7 @@ const BuilderPage: React.FC = () => {
     const aiTextData = aiTextNode.data as AITextNodeData;
 
     try {
-      addLog(
-        `Sending graph with ${nodes.length} nodes and ${edges.length} edges to backend.`
-      );
+      addLog(`Sending graph with ${nodes.length} nodes and ${edges.length} edges to backend.`);
       const response = await runWorkflow({
         nodes,
         edges,
@@ -92,13 +90,11 @@ const BuilderPage: React.FC = () => {
       const mergedOutput = `Prompt:\n${promptData.prompt}\n\nOutput:\n${response.output}`;
       setResult(mergedOutput);
       updateNodeData(resultNode.id, { output: response.output });
-      setStatus('success');
+      setStatus("success");
       addLog(`Workflow completed (thread ${response.threadId}).`);
     } catch (error) {
-      setStatus('error');
-      addLog(
-        error instanceof Error ? error.message : 'Unknown error occurred.'
-      );
+      setStatus("error");
+      addLog(error instanceof Error ? error.message : "Unknown error occurred.");
     }
   }, [addLog, nodes, reset, setResult, setStatus, updateNodeData]);
 
@@ -129,18 +125,10 @@ const BuilderPage: React.FC = () => {
         <header className="builder-topbar">
           <div className="builder-topbar-title">Template Name</div>
           <div className="builder-topbar-actions">
-            <button
-              className="builder-button"
-              onClick={undo}
-              disabled={!canUndo}
-            >
+            <button className="builder-button" onClick={undo} disabled={!canUndo}>
               Undo
             </button>
-            <button
-              className="builder-button"
-              onClick={redo}
-              disabled={!canRedo}
-            >
+            <button className="builder-button" onClick={redo} disabled={!canRedo}>
               Redo
             </button>
             <button className="builder-button" onClick={handleEdit}>

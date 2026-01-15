@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import {
   addEdge,
   applyEdgeChanges,
@@ -15,8 +8,8 @@ import {
   NodeChange,
   EdgeChange,
   Connection,
-} from 'reactflow';
-import { BuilderNodeData } from '../types';
+} from "reactflow";
+import { BuilderNodeData } from "../types";
 
 interface BuilderContextValue {
   nodes: Node<BuilderNodeData>[];
@@ -38,58 +31,50 @@ interface BuilderContextValue {
   setNodes: React.Dispatch<React.SetStateAction<Node<BuilderNodeData>[]>>;
 }
 
-const BuilderContext = createContext<BuilderContextValue | undefined>(
-  undefined
-);
+const BuilderContext = createContext<BuilderContextValue | undefined>(undefined);
 
 const initialNodes: Node<BuilderNodeData>[] = [
   {
-    id: 'start',
-    type: 'start',
+    id: "start",
+    type: "start",
     position: { x: 80, y: 120 },
-    data: { kind: 'start', label: 'Start' },
+    data: { kind: "start", label: "Start" },
   },
   {
-    id: 'prompt',
-    type: 'prompt',
+    id: "prompt",
+    type: "prompt",
     position: { x: 300, y: 120 },
-    data: { kind: 'prompt', prompt: 'Write a helpful answer to the user.' },
+    data: { kind: "prompt", prompt: "Write a helpful answer to the user." },
   },
   {
-    id: 'ai_text',
-    type: 'ai_text',
+    id: "ai_text",
+    type: "ai_text",
     position: { x: 560, y: 120 },
-    data: { kind: 'ai_text', provider: 'openai', model: 'gpt-4o-mini' },
+    data: { kind: "ai_text", provider: "openai", model: "gpt-4o-mini", temperature: 0.7 },
   },
   {
-    id: 'result',
-    type: 'result',
+    id: "result",
+    type: "result",
     position: { x: 820, y: 120 },
-    data: { kind: 'result', output: '' },
+    data: { kind: "result", output: "" },
   },
 ];
 
 const initialEdges: Edge[] = [
-  { id: 'e-start-prompt', source: 'start', target: 'prompt' },
-  { id: 'e-prompt-ai', source: 'prompt', target: 'ai_text' },
-  { id: 'e-ai-result', source: 'ai_text', target: 'result' },
+  { id: "e-start-prompt", source: "start", target: "prompt" },
+  { id: "e-prompt-ai", source: "prompt", target: "ai_text" },
+  { id: "e-ai-result", source: "ai_text", target: "result" },
 ];
 
-export const BuilderProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const BuilderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [nodes, setNodes] = useState<Node<BuilderNodeData>[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
-  const historyRef = useRef<
-    Array<{ nodes: Node<BuilderNodeData>[]; edges: Edge[] }>
-  >([]);
-  const futureRef = useRef<
-    Array<{ nodes: Node<BuilderNodeData>[]; edges: Edge[] }>
-  >([]);
+  const historyRef = useRef<Array<{ nodes: Node<BuilderNodeData>[]; edges: Edge[] }>>([]);
+  const futureRef = useRef<Array<{ nodes: Node<BuilderNodeData>[]; edges: Edge[] }>>([]);
   const isRestoringRef = useRef(false);
 
   const cloneSnapshot = useCallback(
@@ -173,13 +158,10 @@ export const BuilderProvider: React.FC<{ children: React.ReactNode }> = ({
     [recordHistory]
   );
 
-  const addNode = useCallback(
-    (node: Node<BuilderNodeData>) => {
-      recordHistory();
-      setNodes((current) => [...current, node]);
-    },
-    [recordHistory]
-  );
+  const addNode = useCallback((node: Node<BuilderNodeData>) => {
+    recordHistory();
+    setNodes((current) => [...current, node]);
+  }, [recordHistory]);
 
   const deleteSelected = useCallback(() => {
     if (!selectedNodeId && !selectedEdgeId) {
@@ -187,21 +169,14 @@ export const BuilderProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     recordHistory();
     if (selectedNodeId) {
-      setNodes((current) =>
-        current.filter((node) => node.id !== selectedNodeId)
-      );
+      setNodes((current) => current.filter((node) => node.id !== selectedNodeId));
       setEdges((current) =>
-        current.filter(
-          (edge) =>
-            edge.source !== selectedNodeId && edge.target !== selectedNodeId
-        )
+        current.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId)
       );
       setSelectedNodeId(null);
     }
     if (selectedEdgeId) {
-      setEdges((current) =>
-        current.filter((edge) => edge.id !== selectedEdgeId)
-      );
+      setEdges((current) => current.filter((edge) => edge.id !== selectedEdgeId));
       setSelectedEdgeId(null);
     }
   }, [recordHistory, selectedEdgeId, selectedNodeId]);
@@ -279,15 +254,13 @@ export const BuilderProvider: React.FC<{ children: React.ReactNode }> = ({
     ]
   );
 
-  return (
-    <BuilderContext.Provider value={value}>{children}</BuilderContext.Provider>
-  );
+  return <BuilderContext.Provider value={value}>{children}</BuilderContext.Provider>;
 };
 
 export const useBuilderContext = (): BuilderContextValue => {
   const context = useContext(BuilderContext);
   if (!context) {
-    throw new Error('useBuilderContext must be used within BuilderProvider');
+    throw new Error("useBuilderContext must be used within BuilderProvider");
   }
   return context;
 };

@@ -1,4 +1,5 @@
 export { compileGraph } from "./compileGraph";
+export { generateNodeId } from "./nodeId";
 export { runGraphPlan } from "./runPlan";
 export type {
   BuilderGraphEdge,

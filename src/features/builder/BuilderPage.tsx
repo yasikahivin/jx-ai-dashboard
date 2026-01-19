@@ -84,6 +84,7 @@ const BuilderPage: React.FC = () => {
           aiTextConfig: {
             provider: aiTextData.provider,
             model: aiTextData.model,
+            temperature: aiTextData.temperature,
           },
         },
       });

@@ -53,6 +53,7 @@ export async function executeTextFlow(
     thread_id: thread.thread_id,
     provider: config.provider,
     model: config.model,
+    temperature: config.temperature,
     prompt,
   });
 
@@ -61,11 +62,7 @@ export async function executeTextFlow(
 
 const buildGraphPrompt = (payload: ExecuteGraphPayload): string => {
   // The backend only supports text endpoints, so we serialize the graph into a single prompt.
-  return `Execute workflow graph with runtime inputs:\n${JSON.stringify(
-    payload,
-    null,
-    2
-  )}`;
+  return `Execute workflow graph with runtime inputs:\n${JSON.stringify(payload, null, 2)}`;
 };
 
 export async function executeGraphFlow(
@@ -77,11 +74,9 @@ export async function executeGraphFlow(
     thread_id: thread.thread_id,
     provider: config.provider,
     model: config.model,
+    temperature: config.temperature,
     prompt: buildGraphPrompt(payload),
   });
 
-  return {
-    output: getOutputFromResponse(response),
-    threadId: thread.thread_id,
-  };
+  return { output: getOutputFromResponse(response), threadId: thread.thread_id };
 }
